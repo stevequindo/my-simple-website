@@ -1,12 +1,6 @@
-const dotenv = require('dotenv')
-
 require("dotenv").config({
   path: `.env.${process.env.NODE_ENV}`,
 });
-
-if (process.env.NODE_ENV !== 'production') {
-  dotenv.config()
-}
 
 
 module.exports = {
@@ -134,7 +128,7 @@ module.exports = {
       options: {
         spaceId: `9iez0g2cj3qs`,
         // Learn about environment variables: https://gatsby.dev/env-vars
-        accessToken: process.env.CONTENTFUL_ACCESS_TOKEN,
+        accessToken: process.env.GATSBY_CONTENTFUL_ACCESS_TOKEN,
       },
     },
     `gatsby-plugin-image`,
