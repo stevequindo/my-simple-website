@@ -12,13 +12,14 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
   const result = await graphql(
     `
     {
-      allContentfulBlogPost {
+      allContentfulBlogPost(sort: {fields: createdAt, order: DESC}) {
         edges {
           node {
             author
             subtitle
             slug
             id
+            createdAt(formatString: "MMMM DD, YYYY")
             body {
               raw
             }
