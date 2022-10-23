@@ -91,9 +91,6 @@ export const pageQuery = graphql`
       body {
         raw
       }
-      image {
-        url
-      }
     }
     previous: contentfulBlogPost(id: { eq: $previousPostId }) {
       slug

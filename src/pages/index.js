@@ -85,9 +85,6 @@ export const pageQuery = graphql`
           body {
             raw
           }
-          image {
-            url
-          }
         }
       }
     }

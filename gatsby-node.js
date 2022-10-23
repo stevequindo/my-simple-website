@@ -23,9 +23,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             body {
               raw
             }
-            image {
-              url
-            }
           }
         }
       }
