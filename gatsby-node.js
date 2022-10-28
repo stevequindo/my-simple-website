@@ -1,6 +1,7 @@
 const path = require(`path`)
 const { createFilePath } = require(`gatsby-source-filesystem`)
-const { documentToReactComponents } = require('@contentful/rich-text-react-renderer');
+const { documentToReactComponents } = require('@contentful/rich-text-react-renderer')
+const { paginate } = require('gatsby-awesome-pagination')
 
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
@@ -50,15 +51,21 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
 
   const posts = result.data.allContentfulBlogPost.edges
 
-  // Create blog posts pages
+  // Create paginated pages
+  paginate({
+    createPage, // The Gatsby `createPage` function
+    items: posts, // An array of objects
+    itemsPerPage: 5, // How many items you want per page
+    pathPrefix: '/', // Creates pages like `/blog`, `/blog/2`, etc
+    component: path.resolve('./src/templates/index.js'), // Just like `createPage()`
+  })
 
+
+  // Create blog posts pages
   if (posts.length > 0) {
     posts.forEach((post, index) => {
       const previousPostId = index === 0 ? null : posts[index - 1].node.id
       const nextPostId = index === posts.length - 1 ? null : posts[index + 1].node.id
-      console.log("highschool")
-      console.log(post.node.slug)
-
       createPage({
         path: post.node.slug,
         component: blogPost,

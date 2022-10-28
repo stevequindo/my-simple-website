@@ -67,13 +67,15 @@ export default BlogIndex
 export const Head = () => <Seo title="All posts" />
 
 export const pageQuery = graphql`
-  query {
+  query(    
+    $skip: Int! 
+    $limit: Int!) {
     site {
       siteMetadata {
         title
       }
     }
-    allContentfulBlogPost(sort: {fields: createdAt, order: DESC}) {
+    allContentfulBlogPost(sort: {fields: createdAt, order: DESC}, skip: $skip limit: $limit) {
       edges {
         node {
           title

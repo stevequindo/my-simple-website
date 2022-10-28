@@ -79,5 +79,6 @@ module.exports = {
       },
     },
     `gatsby-plugin-image`,
+    `gatsby-awesome-pagination`
   ],
 }

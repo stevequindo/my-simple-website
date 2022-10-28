@@ -4,9 +4,10 @@ import { Link } from "gatsby"
 const Layout = ({ location, title, children }) => {
   const rootPath = `${__PATH_PREFIX__}/`
   const isRootPath = location.pathname === rootPath
+  const isPaginatedPages = new RegExp(rootPath + "\\d").test(location.pathname)
   let header
 
-  if (isRootPath) {
+  if (isRootPath || isPaginatedPages) {
     header = (
       <h1 className="main-heading">
         <Link to="/">{title}</Link>

@@ -10,6 +10,7 @@
   "dependencies": {
     "dotenv": "^16.0.3",
     "gatsby": "^4.24.4",
+    "gatsby-awesome-pagination": "^0.3.8",
     "gatsby-plugin-feed": "^4.24.0",
     "gatsby-plugin-image": "^2.24.0",
     "gatsby-plugin-manifest": "^4.24.0",
