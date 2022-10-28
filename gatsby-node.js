@@ -22,6 +22,16 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             createdAt(formatString: "MMMM DD, YYYY")
             body {
               raw
+              references {
+                ... on ContentfulAsset {
+                  id
+                  contentful_id
+                  sys {
+                    type
+                  }
+                  url
+                }
+              }
             }
           }
         }

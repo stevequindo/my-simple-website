@@ -6,12 +6,36 @@ import Layout from "../components/layout"
 import Seo from "../components/seo"
 // const { documentToReactComponents } = require('@contentful/rich-text-react-renderer');
 import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { BLOCKS, INLINES } from "@contentful/rich-text-types";
 
 const BlogPostContentfulTemplate = ({
   data: { previous, next, site, contentfulBlogPost : post },
   location,
 }) => {
   const siteTitle = site.siteMetadata?.title || `Title`
+
+
+  function renderOptions(references) {
+    const assetMap = new Map();
+    console.log(references)
+    for (const reference of references) {
+      console.log(reference)
+      if (reference.sys.type == "Asset") {
+        assetMap.set(reference.contentful_id, reference)
+      }
+    }
+  
+    return {
+      renderNode: {
+        [BLOCKS.EMBEDDED_ASSET]: (node, next) => {
+          const asset = assetMap.get(node.data.target.sys.id)
+          return (
+            <img src={asset.url} width="630" alt="My image alt text" />
+          );
+        },
+      },
+    };
+  }
 
   return (
     <Layout location={location} title={siteTitle}>
@@ -24,7 +48,7 @@ const BlogPostContentfulTemplate = ({
           <h1 itemProp="headline">{post.title}</h1>
           <p>{post.createdAt}</p>
         </header>
-        <section itemProp="articleBody">{documentToReactComponents(JSON.parse(post.body.raw))}</section>
+        <section itemProp="articleBody">{documentToReactComponents(JSON.parse(post.body.raw), renderOptions(post.body.references))}</section>
         <hr />
         <footer>
           <Bio />
@@ -90,6 +114,22 @@ export const pageQuery = graphql`
       createdAt(formatString: "MMMM DD, YYYY")
       body {
         raw
+        references {
+          ... on ContentfulAsset {
+            id
+            contentful_id
+            sys {
+              type
+            }
+            url
+          }
+          ... on ContentfulBlogPost {
+            id
+            sys {
+              type
+            }
+          } 
+        }
       }
     }
     previous: contentfulBlogPost(id: { eq: $previousPostId }) {
