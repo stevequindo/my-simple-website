@@ -10,13 +10,37 @@ import { rhythm, scale } from '../utils/typography'
 
 const BlogIndex = ({ data, location, pageContext }) => {
   const { humanPageNumber, numberOfPages, previousPagePath, nextPagePath } = pageContext;
-
-  console.log(pageContext)
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const posts = data.allContentfulBlogPost.edges
+  const divisible = 3
 
-  const isFirst = humanPageNumber === 1 ? true : false;
+  const isFirst = humanPageNumber < divisible + 1 ? true : false;
   const isLast = humanPageNumber === numberOfPages ? true : false;
+
+  const largestCurrentPage = (((Math.floor(humanPageNumber / divisible)) + 1) * divisible) + 1
+  const prevLargestCurrentPage = ((Math.floor((humanPageNumber - 1) / divisible) + 1) * divisible) + 1
+
+
+  let largestPage = largestCurrentPage > numberOfPages ?  numberOfPages : largestCurrentPage
+
+  if (humanPageNumber % divisible === 0) {
+    largestPage = prevLargestCurrentPage
+  }
+
+  let start = largestPage - (divisible)
+
+
+  if ((humanPageNumber-1)  % divisible === 0) {
+    // Means you clicked the "..."
+    start = humanPageNumber
+    console.log("start")
+    console.log(start)
+  }
+
+
+  console.log("largestPage")
+  console.log(largestPage)
+
 
   if (posts.length === 0) {
     return (
@@ -68,18 +92,18 @@ const BlogIndex = ({ data, location, pageContext }) => {
         >
       {!isFirst && (
             <Link style={{boxShadow: 'none', marginRight: '10px', color: 'purple'}} to={previousPagePath} rel="prev">
-              Prev
+              Prev {}
             </Link>
           )}
-          {Array.from({ length: numberOfPages }, (_, i) => (
+          {Array.from(range(start,largestPage + 1), i => (
             <li
-              key={`pagination-number${i + 1}`}
+              key={`pagination-number${i}`}
               style={{
                 margin: 0,
               }}
             >
               <Link
-                to={`/${i === 0 ? '' : i + 1}`}
+                to={`/${i === 1 ? '' : i}`}
                 style={{
                   boxShadow: 'none',
                   padding: rhythm(1 / 4),
@@ -87,23 +111,46 @@ const BlogIndex = ({ data, location, pageContext }) => {
                   marginRight: '10px',
                   textDecoration: 'none',
                   color: 'purple',
-                  opacity: i + 1 === humanPageNumber ? '1' : '0.5',
-                  // background: i + 1 === humanPageNumber ? '#007acc' : '',
+                  opacity: i === humanPageNumber ? '1' : '0.5',
+                  fontWeight: i === humanPageNumber ? 'bolder' : 'inherit'
                 }}
               >
-                {i + 1}
+                {(i !== largestPage || i === numberOfPages) ? i : "..."}
               </Link>
             </li>
           ))}
-          {!isLast && (
-            <Link style={{boxShadow: 'none', marginLeft: '10px', color: 'purple'}} to={nextPagePath} rel="next">
+          {!isLast && largestPage !== numberOfPages &&
+            (<Link style={{boxShadow: 'none', marginLeft: '5px', color: 'purple', }} to={nextPagePath} rel="next">
               Next
-            </Link>
-          )}
+            </Link>)}
         </ul>
     </Layout>
   )
 }
+
+
+function range(start, stop, step) {
+  if (typeof stop == 'undefined') {
+      // one param defined
+      stop = start;
+      start = 0;
+  }
+
+  if (typeof step == 'undefined') {
+      step = 1;
+  }
+
+  if ((step > 0 && start >= stop) || (step < 0 && start <= stop)) {
+      return [];
+  }
+
+  var result = [];
+  for (var i = start; step > 0 ? i < stop : i > stop; i += step) {
+      result.push(i);
+  }
+
+  return result;
+};
 
 export default BlogIndex
 
