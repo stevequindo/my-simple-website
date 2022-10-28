@@ -9,6 +9,9 @@ import * as React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import { StaticImage } from "gatsby-plugin-image"
 
+import { rhythm } from '../utils/typography'
+
+
 const Bio = () => {
   const data = useStaticQuery(graphql`
     query BioQuery {
@@ -31,7 +34,11 @@ const Bio = () => {
   const social = data.site.siteMetadata?.social
 
   return (
-    <div className="bio">
+    <div style={{
+      display: `flex`,
+      marginBottom: rhythm(2.5),
+    }}
+    >
       <StaticImage
         className="bio-avatar"
         layout="fixed"
@@ -41,10 +48,16 @@ const Bio = () => {
         height={50}
         quality={95}
         alt="Profile picture"
+        style={{
+          marginRight: rhythm(1 / 2),
+          marginBottom: 0,
+          minWidth: 50,
+          borderRadius: `100%`,
+        }}
       />
       {author?.name && (
         <p>
-          <strong>{author.name}</strong> | {author?.summary || null}
+          Written by <strong>{author.name}</strong> | {author?.summary || null}
           {` `}
           {/* <a href={`https://twitter.com/${social?.twitter || ``}`}>
             You should follow them on Twitter

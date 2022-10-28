@@ -3,6 +3,7 @@ const { createFilePath } = require(`gatsby-source-filesystem`)
 const { documentToReactComponents } = require('@contentful/rich-text-react-renderer')
 const { paginate } = require('gatsby-awesome-pagination')
 
+
 exports.createPages = async ({ graphql, actions, reporter }) => {
   const { createPage } = actions
 
@@ -20,7 +21,7 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
             subtitle
             slug
             id
-            createdAt(formatString: "MMMM DD, YYYY")
+            createdAt(formatString: "DD MMMM, YYYY")
             body {
               raw
               references {

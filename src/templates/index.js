@@ -5,7 +5,7 @@ import Bio from "../components/bio"
 import Layout from "../components/layout"
 import Seo from "../components/seo"
 
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer';
+import { rhythm, scale } from '../utils/typography'
 
 
 const BlogIndex = ({ data, location }) => {
@@ -29,27 +29,24 @@ const BlogIndex = ({ data, location }) => {
       <ol style={{ listStyle: `none` }}>
         {posts.map(post => {
           const title = post.node.title
-
           return (
-            <li key={post.node.slug}>
-              <article
-                className="post-list-item"
-                itemScope
-                itemType="http://schema.org/Article"
+            <div key={post.node.slug}>
+              <h3
+                style={{
+                  marginBottom: rhythm(1 / 4)
+                }}
               >
-                <header>
-                  <h2>
-                    <Link to={post.node.slug} itemProp="url">
-                      <span itemProp="headline">{title}</span>
-                    </Link>
-                  </h2>
-                  <small>{post.node.createdAt}</small>
-                </header>
-                <section>
-                <p itemProp="description">{post.node.subtitle}</p>
-                </section>
-              </article>
-            </li>
+                <Link style={{ 
+                boxShadow: 'none', 
+                letterSpacing: `0.5px`,
+                textShadow: `0.5px 0px`,    
+                }} to={post.node.slug}>
+                  {title}
+                </Link>
+              </h3>
+              <small>{post.node.createdAt}</small>
+              <p>{post.node.subtitle}</p>
+            </div>
           )
         })}
       </ol>
