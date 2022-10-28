@@ -8,9 +8,15 @@ import Seo from "../components/seo"
 import { rhythm, scale } from '../utils/typography'
 
 
-const BlogIndex = ({ data, location }) => {
+const BlogIndex = ({ data, location, pageContext }) => {
+  const { humanPageNumber, numberOfPages, previousPagePath, nextPagePath } = pageContext;
+
+  console.log(pageContext)
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const posts = data.allContentfulBlogPost.edges
+
+  const isFirst = humanPageNumber === 1 ? true : false;
+  const isLast = humanPageNumber === numberOfPages ? true : false;
 
   if (posts.length === 0) {
     return (
@@ -50,6 +56,51 @@ const BlogIndex = ({ data, location }) => {
           )
         })}
       </ol>
+      <ul
+          style={{
+            marginTop: `65px`,
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            listStyle: 'none',
+            padding: 0,
+          }}
+        >
+      {!isFirst && (
+            <Link style={{boxShadow: 'none', marginRight: '10px', color: 'purple'}} to={previousPagePath} rel="prev">
+              Prev
+            </Link>
+          )}
+          {Array.from({ length: numberOfPages }, (_, i) => (
+            <li
+              key={`pagination-number${i + 1}`}
+              style={{
+                margin: 0,
+              }}
+            >
+              <Link
+                to={`/${i === 0 ? '' : i + 1}`}
+                style={{
+                  boxShadow: 'none',
+                  padding: rhythm(1 / 4),
+                  marginLeft: '10px',
+                  marginRight: '10px',
+                  textDecoration: 'none',
+                  color: 'purple',
+                  opacity: i + 1 === humanPageNumber ? '1' : '0.5',
+                  // background: i + 1 === humanPageNumber ? '#007acc' : '',
+                }}
+              >
+                {i + 1}
+              </Link>
+            </li>
+          ))}
+          {!isLast && (
+            <Link style={{boxShadow: 'none', marginLeft: '10px', color: 'purple'}} to={nextPagePath} rel="next">
+              Next
+            </Link>
+          )}
+        </ul>
     </Layout>
   )
 }
