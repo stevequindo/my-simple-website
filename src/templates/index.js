@@ -12,35 +12,32 @@ const BlogIndex = ({ data, location, pageContext }) => {
   const { humanPageNumber, numberOfPages, previousPagePath, nextPagePath } = pageContext;
   const siteTitle = data.site.siteMetadata?.title || `Title`
   const posts = data.allContentfulBlogPost.edges
-  const divisible = 3
+  const group = 4
 
-  const isFirst = humanPageNumber < divisible + 1 ? true : false;
-  const isLast = humanPageNumber === numberOfPages ? true : false;
-
-  const largestCurrentPage = (((Math.floor(humanPageNumber / divisible)) + 1) * divisible) + 1
-  const prevLargestCurrentPage = ((Math.floor((humanPageNumber - 1) / divisible) + 1) * divisible) + 1
-
-
-  let largestPage = largestCurrentPage > numberOfPages ?  numberOfPages : largestCurrentPage
-
-  if (humanPageNumber % divisible === 0) {
-    largestPage = prevLargestCurrentPage
+  let listOfArrays = []
+  let inner = []
+  for (let i = 1; i <= numberOfPages ; i++) {
+    inner.push(i)
+    if (i % group === 0 || i === numberOfPages) {
+      listOfArrays.push(inner)
+      inner = []
+    }
   }
+  
+  // Find which array we are currently in.
+  let rangeArray = []
+  let index = 0
+  for (let i = 0; i < listOfArrays.length; i++) {
+      if (listOfArrays[i].includes(humanPageNumber)) {
+          index = i
+          rangeArray = listOfArrays[i]
+      }
+  } 
 
-  let start = largestPage - (divisible)
+  let isFirstGroup = index === 0 ? true : false
+  let isLastGroup = index === listOfArrays.length - 1 ? true : false
 
-
-  if ((humanPageNumber-1)  % divisible === 0) {
-    // Means you clicked the "..."
-    start = humanPageNumber
-    console.log("start")
-    console.log(start)
-  }
-
-
-  console.log("largestPage")
-  console.log(largestPage)
-
+  
 
   if (posts.length === 0) {
     return (
@@ -70,7 +67,7 @@ const BlogIndex = ({ data, location, pageContext }) => {
                 boxShadow: 'none', 
                 letterSpacing: `0.5px`,
                 textShadow: `0.5px 0px`,    
-                }} to={post.node.slug}>
+                }} to={"/" + post.node.slug}>
                   {title}
                 </Link>
               </h3>
@@ -90,12 +87,12 @@ const BlogIndex = ({ data, location, pageContext }) => {
             padding: 0,
           }}
         >
-      {!isFirst && (
+      {!isFirstGroup && (
             <Link style={{boxShadow: 'none', marginRight: '10px', color: 'purple'}} to={previousPagePath} rel="prev">
               Prev {}
             </Link>
           )}
-          {Array.from(range(start,largestPage + 1), i => (
+          {Array.from(rangeArray, i => (
             <li
               key={`pagination-number${i}`}
               style={{
@@ -115,13 +112,13 @@ const BlogIndex = ({ data, location, pageContext }) => {
                   fontWeight: i === humanPageNumber ? 'bolder' : 'inherit'
                 }}
               >
-                {(i !== largestPage || i === numberOfPages) ? i : "..."}
+                {i}
               </Link>
             </li>
           ))}
-          {!isLast && largestPage !== numberOfPages &&
-            (<Link style={{boxShadow: 'none', marginLeft: '5px', color: 'purple', }} to={nextPagePath} rel="next">
-              Next
+          {!isLastGroup &&
+            (<Link style={{boxShadow: 'none', marginLeft: '0px', color: 'purple', }} to={nextPagePath} rel="next">
+              ... Next
             </Link>)}
         </ul>
     </Layout>
