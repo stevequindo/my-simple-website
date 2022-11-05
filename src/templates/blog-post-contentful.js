@@ -115,20 +115,12 @@ export const pageQuery = graphql`
       body {
         raw
         references {
-          ... on ContentfulAsset {
-            id
-            contentful_id
-            sys {
-              type
-            }
-            url
+          id
+          contentful_id
+          sys {
+            type
           }
-          ... on ContentfulBlogPost {
-            id
-            sys {
-              type
-            }
-          } 
+          url
         }
       }
     }
