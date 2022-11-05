@@ -171,7 +171,6 @@ export const pageQuery = graphql`
       edges {
         node {
           title
-          author
           subtitle
           slug
           id

@@ -17,7 +17,6 @@ exports.createPages = async ({ graphql, actions, reporter }) => {
       allContentfulBlogPost(sort: {fields: createdAt, order: DESC}) {
         edges {
           node {
-            author
             subtitle
             slug
             id
